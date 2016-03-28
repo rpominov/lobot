@@ -1,3 +1,5 @@
+"use strict"
+
 const tapeCatch = require('tape-catch')
 
 const enhanceT = t => {

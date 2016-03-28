@@ -3,9 +3,10 @@ const tapeCatch = require('tape-catch')
 const enhanceT = t => {
   return Object.assign({}, t, {
 
-    calledWith(...xs) {
-      return (x, ...rest) => {
-        if (rest.length > 0) {
+    calledWith() {
+      const xs = Array.prototype.slice.call(arguments)
+      return function(x) {
+        if (arguments.length > 1) {
           t.fail('called with more than one arg')
         }
         t.deepEqual(x, xs.shift())

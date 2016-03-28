@@ -1,0 +1,38 @@
+{
+  "name": "lobot",
+  "version": "0.0.0",
+  "description": "A dumb robot that supposed to help me to build nice projects",
+  "scripts": {
+    "postversion": "git push && git push origin --tags && npm publish"
+  },
+  "bin": {
+    "lobot": "bin/cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rpominov/lobot.git"
+  },
+  "author": "Roman Pominov <rpominov@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rpominov/lobot/issues"
+  },
+  "homepage": "https://github.com/rpominov/lobot#readme",
+  "dependencies": {
+    "babel-cli": "6.6.5",
+    "babel-core": "6.7.4",
+    "babel-register": "6.7.2",
+    "change-case": "2.3.1",
+    "commander": "2.9.0",
+    "coveralls": "2.11.9",
+    "faucet": "0.0.1",
+    "nodemon": "1.9.1",
+    "nyc": "6.1.1",
+    "rollup": "0.25.6",
+    "rollup-plugin-babel": "2.4.0",
+    "rollup-plugin-commonjs": "2.2.1",
+    "rollup-plugin-node-resolve": "1.5.0",
+    "tap-notify": "1.0.0",
+    "tape": "4.5.1"
+  }
+}

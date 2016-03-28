@@ -26,6 +26,12 @@ const enhanceT = t => {
   })
 }
 
+const addPrefix = (prefix, text) => {
+  return prefix
+    ? `${prefix}. ${text}`
+    : text
+}
+
 const wrap = (prefix, cb) => {
   const test = (text, plan, cb) => {
     tapeCatch(`${prefix}. ${text}`, t => {
@@ -35,12 +41,12 @@ const wrap = (prefix, cb) => {
     })
   }
   test.async = (test, plan, cb) => {
-    tapeCatch(`${prefix}. ${text}`, t => {
+    tapeCatch(addPrefix(prefix, text), t => {
       t.plan(plan)
       cb(enhanceT(t))
     })
   }
-  test.wrap = (_prefix, cb) => wrap(`${prefix}. ${_prefix}`, cb)
+  test.wrap = (_prefix, cb) => wrap(addPrefix(prefix, _prefix), cb)
   if (cb) {
     cb(test)
   }

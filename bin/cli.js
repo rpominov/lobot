@@ -11,7 +11,7 @@ const exec = command => {
   execSync(command, {stdio: 'inherit'})
 }
 
-const b = fn => path.join(__dirname, '..', 'node_modules', '.bin', fn)
+const b = filename => `\`npm bin\`/${filename}`
 
 const baseTestCommand = `BABEL_ENV=commonjs ${b('tape')} -r babel-register test/*.js`
 const nyc = `${b('nyc')} --include **/src/** --all --require babel-register`

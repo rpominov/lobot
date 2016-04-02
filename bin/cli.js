@@ -22,29 +22,26 @@ const babelRegister = path.resolve(path.join(__dirname, 'babelRegister.js'))
 
 const build = options => {
   const cleanup = `rm -rf lib lib-es umd browser-repl.html`
-  const babel = `${b('babel')} src --out-dir`
-  const esnext = `BABEL_ENV=rollup ${babel} lib-es`
-  const commonjs = `BABEL_ENV=commonjs ${babel} lib`
-  const umd = `BABEL_ENV=rollup ${b('rollup')} -c ${path.join(__dirname, 'rollup.config.js')}`
+  const commonjs = `${b('babel')} --no-babelrc --presets es2015 --plugins transform-object-rest-spread src --out-dir lib`
+  const esnext = `${b('rollup')} -c ${path.join(__dirname, 'rollup.config.esnext.js')}`
+  const umd = `${b('rollup')} -c ${path.join(__dirname, 'rollup.config.js')}`
   const umdMin = `${b('uglifyjs')} -m -c -- umd/${projectName.camelCase}.js > umd/${projectName.camelCase}.min.js`
 
-  if (options.mode === 'browser-repl') {
-    exec(`${cleanup} && ${umd}`)
-    return
-  }
+  // if (options.mode === 'browser-repl') {
+  //   exec(`${cleanup} && ${umd}`)
+  //   return
+  // }
 
-  if (options.mode === 'browser-repl-watch') {
-    exec(`${b('nodemon')} --watch src --exec "${umd}"`)
-    return
-  }
-
-
+  // if (options.mode === 'browser-repl-watch') {
+  //   exec(`${b('nodemon')} --watch src --exec "${umd}"`)
+  //   return
+  // }
 
   exec(`${cleanup} && ${esnext} && ${commonjs} && ${umd} && ${umdMin}`)
 }
 
 const test = options => {
-  const baseTestCommand = `BABEL_ENV=commonjs ${b('tape')} -r ${babelRegister} test/*.js`
+  const baseTestCommand = `${b('tape')} -r ${babelRegister} test/*.js`
 
   if (!options.mode || options.mode === 'normal') {
     exec(`${baseTestCommand} | ${b('faucet')}`)
@@ -59,7 +56,7 @@ const test = options => {
 
   if (options.mode === 'coverage' || options.mode === 'coveralls') {
     const nyc = `${b('nyc')} --include **/src/** --all --require ${babelRegister}`
-    const base = `BABEL_ENV=commonjs ${nyc} ${b('tape')} test/*.js && ${nyc} report --reporter=text-lcov`
+    const base = `${nyc} ${b('tape')} test/*.js && ${nyc} report --reporter=text-lcov`
     if (options.mode === 'coverage') {
       exec(`${base} > lcov.info`)
     } else {
@@ -103,7 +100,7 @@ program
   .description('open REPL. modes: node|browser default to node')
   .action(mode => {
     if (!mode || mode === 'node') {
-      exec(`BABEL_ENV=commonjs node --require ${babelRegister}`)
+      exec(`node --require ${babelRegister}`)
       return
     }
     browserRepl()

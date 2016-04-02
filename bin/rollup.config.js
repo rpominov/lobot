@@ -11,7 +11,6 @@ const name = require(path.resolve('./package.json')).name
 const camelCase = changeCase.camelCase(name)
 const pascalCase = changeCase.pascalCase(name)
 
-
 export default {
   entry: 'src/index.js',
   dest: `umd/${camelCase}.js`,

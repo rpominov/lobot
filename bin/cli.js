@@ -76,12 +76,90 @@ const browserRepl = () => {
 
 program.version(pkg.version)
 
-// program
-//   .command('init')
-//   .description('init lobot based project')
-//   .action(() => {
-//     console.log('TODO')
-//   })
+program
+  .command('init')
+  .description('init lobot based project')
+  .action(() => {
+    exec('npm i -D eslint babel-eslint')
+
+    const pkg = require(path.resolve('./package.json'))
+    pkg.main = 'lib/index.js'
+    pkg.files = ['lib', 'lib-es', 'umd']
+    pkg.scripts = {
+      lobot: 'lobot',
+      lint: 'eslint .',
+      test: 'eslint . && lobot test',
+    }
+    fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2))
+
+    fs.writeFileSync('./.eslintignore',
+`lib
+lib-es
+umd
+.build-artifacts
+`)
+
+    fs.writeFileSync('./.eslintrc',
+`{
+  "parser": "babel-eslint",
+  "extends": ["eslint:recommended"],
+  "rules": {
+    "comma-dangle": [2, 'always-multiline']
+  },
+  "env": {
+    "node": true
+  }
+}
+`)
+
+    fs.writeFileSync('./.gitignore',
+`node_modules
+lib
+lib-es
+umd
+npm-debug.log
+.nyc_output
+.build-artefacts
+`)
+
+    fs.writeFileSync('./.npmignore',
+`npm-debug.log
+.nyc_output
+.build-artefacts
+`)
+
+    fs.writeFileSync('./.travis.yml',
+`language: node_js
+sudo: false
+node_js:
+- '4.2'
+cache:
+  directories:
+    - node_modules
+script:
+  - npm run lint && npm run lobot -- test coveralls
+`)
+
+    fs.writeFileSync('./coverageconfig.json',
+`{
+  "coverage": ["./.build-artefacts/lcov.info"]
+}
+`)
+
+    const readme = fs.readFileSync('./README.md', 'utf8')
+    fs.writeFileSync('./README.md',
+`${readme}
+
+## Development
+
+\`\`\`
+npm run lobot -- --help
+\`\`\`
+
+Run [lobot](https://github.com/rpominov/lobot) commands as \`npm run lobot -- args...\`
+`)
+
+  })
 
 program
   .command('build')

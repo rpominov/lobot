@@ -27,17 +27,15 @@ const build = options => {
   const umd = `${b('rollup')} -c ${path.join(__dirname, 'rollup.config.js')}`
   const umdMin = `${b('uglifyjs')} -m -c -- umd/${projectName.camelCase}.js > umd/${projectName.camelCase}.min.js`
 
-  // if (options.mode === 'browser-repl') {
-  //   exec(`${cleanup} && ${umd}`)
-  //   return
-  // }
+  if (options.mode === 'browser-repl') {
+    return `${cleanup} && ${umd}`
+  }
 
-  // if (options.mode === 'browser-repl-watch') {
-  //   exec(`${b('nodemon')} --watch src --exec "${umd}"`)
-  //   return
-  // }
+  if (options.mode === 'browser-repl-watch') {
+    return `${b('nodemon')} --watch src --exec "${umd}"`
+  }
 
-  exec(`${cleanup} && ${esnext} && ${commonjs} && ${umd} && ${umdMin}`)
+  return `${cleanup} && ${esnext} && ${commonjs} && ${umd} && ${umdMin}`
 }
 
 const test = options => {
@@ -58,7 +56,7 @@ const test = options => {
     const nyc = `${b('nyc')} --include **/src/** --all --require ${babelRegister}`
     const base = `${nyc} ${b('tape')} test/*.js && ${nyc} report --reporter=text-lcov`
     if (options.mode === 'coverage') {
-      exec(`${base} > lcov.info`)
+      exec(`${base} > .build-artefacts/lcov.info`)
     } else {
       exec(`${base} | ${b('coveralls')}`)
     }
@@ -66,29 +64,29 @@ const test = options => {
 }
 
 const browserRepl = () => {
-  build({mode: 'browser-repl'})
+  exec(build({mode: 'browser-repl'}))
   mkdp('./.build-artefacts')
   fs.writeFileSync('./.build-artefacts/repl.html', `
     <script src="../umd/${projectName.camelCase}.js"></script>
     Open browser console
   `)
   exec(`open ./.build-artefacts/repl.html`)
-  build({mode: 'browser-repl-watch'})
+  exec(build({mode: 'browser-repl-watch'}))
 }
 
 program.version(pkg.version)
 
-program
-  .command('init')
-  .description('init lobot based project')
-  .action(() => {
-    console.log('TODO')
-  })
+// program
+//   .command('init')
+//   .description('init lobot based project')
+//   .action(() => {
+//     console.log('TODO')
+//   })
 
 program
   .command('build')
   .description('compile to ES5, create UMD bundles, etc.')
-  .action(() => { build({}) })
+  .action(() => { exec(build({})) })
 
 program
   .command('test [mode]')
@@ -107,12 +105,12 @@ program
   })
 
 program
-  .command('release')
+  .command('release <version>')
   .description('publish a new version to NPM')
-  .action(() => {
-    console.log('TODO')
-    // "preversion": "npm run test && npm run build",
-    // "postversion": "git push && git push origin --tags && npm publish",
+  .action(version => {
+    const pre = `npm test && ${build({})}`
+    const post = 'git push && git push origin --tags && npm publish'
+    exec(`${pre} && npm version ${version} && ${post}`)
   })
 
 program.parse(process.argv)

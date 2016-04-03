@@ -84,6 +84,7 @@ program
 
     const pkg = require(path.resolve('./package.json'))
     pkg.main = 'lib/index.js'
+    pkg['jsnext:main'] = 'lib-es/index.js'
     pkg.files = ['lib', 'lib-es', 'umd']
     pkg.scripts = {
       lobot: 'lobot',
@@ -132,7 +133,7 @@ npm-debug.log
 `language: node_js
 sudo: false
 node_js:
-- '4.2'
+- '5.10'
 cache:
   directories:
     - node_modules

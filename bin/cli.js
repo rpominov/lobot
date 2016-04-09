@@ -20,22 +20,32 @@ const b = filename => `\`npm bin\`/${filename}`
 
 const babelRegister = path.resolve(path.join(__dirname, 'babelRegister.js'))
 
+const cleanup = options => {
+  if (options.mode === 'soft') {
+    return 'rm -rf lib lib-es umd'
+  }
+  if (options.mode === 'hard') {
+    return 'rm -rf lib lib-es umd .build-artefacts .nyc_output'
+  }
+
+  return options.mode === 'so'
+}
+
 const build = options => {
-  const cleanup = `rm -rf lib lib-es umd browser-repl.html`
   const commonjs = `${b('babel')} --no-babelrc --presets es2015 --plugins transform-object-rest-spread src --out-dir lib`
   const esnext = `${b('rollup')} -c ${path.join(__dirname, 'rollup.config.esnext.js')}`
   const umd = `${b('rollup')} -c ${path.join(__dirname, 'rollup.config.js')}`
   const umdMin = `${b('uglifyjs')} -m -c -- umd/${projectName.camelCase}.js > umd/${projectName.camelCase}.min.js`
 
   if (options.mode === 'browser-repl') {
-    return `${cleanup} && ${umd}`
+    return `${cleanup({mode:'soft'})} && ${umd}`
   }
 
   if (options.mode === 'browser-repl-watch') {
     return `${b('nodemon')} --watch src --exec "${umd}"`
   }
 
-  return `${cleanup} && ${esnext} && ${commonjs} && ${umd} && ${umdMin}`
+  return `${cleanup({mode:'soft'})} && ${esnext} && ${commonjs} && ${umd} && ${umdMin}`
 }
 
 const test = options => {
@@ -97,7 +107,7 @@ program
 `lib
 lib-es
 umd
-.build-artifacts
+.build-artefacts
 `)
 
     fs.writeFileSync('./.eslintrc',
@@ -161,6 +171,11 @@ Run [lobot](https://github.com/rpominov/lobot) commands as \`npm run lobot -- ar
 `)
 
   })
+
+program
+  .command('cleanup [mode]')
+  .description('remove build files, if mode=hard also removes all build artefacts')
+  .action(mode => { exec(cleanup({mode})) })
 
 program
   .command('build')

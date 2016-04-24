@@ -34,7 +34,7 @@ const addPrefix = (prefix, text) => {
 
 const wrap = (prefix, cb) => {
   const test = (text, plan, cb) => {
-    tapeCatch(`${prefix}. ${text}`, t => {
+    tapeCatch(addPrefix(prefix, text), t => {
       t.plan(plan)
       cb(enhanceT(t))
       t.end()

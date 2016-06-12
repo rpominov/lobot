@@ -42,5 +42,5 @@
     "tape-catch": "1.0.5",
     "uglifyjs": "2.4.10",
     "babel-preset-react": "6.5.0"
-  },
+  }
 }

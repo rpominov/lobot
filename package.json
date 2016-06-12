@@ -39,6 +39,10 @@
     "rollup-plugin-node-resolve": "1.7.0",
     "tap-notify": "1.0.0",
     "tape": "4.5.1",
-    "tape-catch": "1.0.5"
+    "tape-catch": "1.0.5",
+    "uglifyjs": "2.4.10"
+  },
+  "devDependencies": {
+    "babel-preset-react": "6.5.0"
   }
 }

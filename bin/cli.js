@@ -199,6 +199,13 @@ program
   })
 
 program
+  .command('run [path]')
+  .description('runs js program from given path with babel compilation')
+  .action(path => {
+    exec(`node --require ${babelRegister} ${path}`)
+  })
+
+program
   .command('release <version>')
   .description('publish a new version to NPM')
   .action(version => {

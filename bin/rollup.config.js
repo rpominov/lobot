@@ -13,7 +13,7 @@ export default {
     commonjs(),
     babel({
       exclude: 'node_modules/**',
-      presets: ['babel-preset-es2015-rollup', 'react'],
+      presets: ['babel-preset-es2015-rollup', 'babel-preset-react'],
       plugins: ['transform-object-rest-spread'],
       babelrc: false,
     }),

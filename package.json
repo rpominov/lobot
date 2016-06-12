@@ -40,9 +40,7 @@
     "tap-notify": "1.0.0",
     "tape": "4.5.1",
     "tape-catch": "1.0.5",
-    "uglifyjs": "2.4.10"
-  },
-  "devDependencies": {
+    "uglifyjs": "2.4.10",
     "babel-preset-react": "6.5.0"
-  }
+  },
 }

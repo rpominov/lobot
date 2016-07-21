@@ -13,8 +13,8 @@ export default {
     commonjs(),
     babel({
       exclude: 'node_modules/**',
-      presets: ['babel-preset-es2015-rollup', 'babel-preset-stage-1', 'babel-preset-react'],
-      plugins: ['transform-object-rest-spread'],
+      presets: ['es2015-rollup', 'stage-1', 'react'],
+      plugins: [],
       babelrc: false,
     }),
   ],

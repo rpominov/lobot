@@ -1,6 +1,6 @@
 {
   "name": "lobot",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "A dumb robot that supposed to help me to build nice projects",
   "scripts": {
     "postversion": "git push && git push origin --tags && npm publish"

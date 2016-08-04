@@ -6,7 +6,7 @@ const projectName = require('./projectName')
 
 export default {
   entry: 'src/index.js',
-  dest: `umd/${projectName.camelCase}.js`,
+  dest: `lib/index.js`,
   plugins: [
     nodeResolve({jsnext: true, main: true}),
     json(),
@@ -18,6 +18,6 @@ export default {
       babelrc: false,
     }),
   ],
-  format: 'umd',
-  moduleName: projectName.pascalCase,
+  format: 'cjs',
+  external: projectName.deps,
 }

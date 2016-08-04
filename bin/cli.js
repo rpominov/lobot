@@ -32,9 +32,9 @@ const cleanup = options => {
 }
 
 const build = options => {
-  const commonjs = `${b('babel')} --no-babelrc --presets es2015,stage-1,react --plugins transform-object-rest-spread src --out-dir lib`
-  const esnext = `${b('rollup')} -c ${path.join(__dirname, 'rollup.config.esnext.js')}`
-  const umd = `${b('rollup')} -c ${path.join(__dirname, 'rollup.config.js')}`
+  const commonjs = `${b('rollup')} -c ${path.join(__dirname, 'rollup.config.cjs.js')}`
+  const esnext = `${b('rollup')} -c ${path.join(__dirname, 'rollup.config.es.js')}`
+  const umd = `${b('rollup')} -c ${path.join(__dirname, 'rollup.config.umd.js')}`
   const umdMin = `${b('uglifyjs')} -m -c -- umd/${projectName.camelCase}.js > umd/${projectName.camelCase}.min.js`
 
   if (options.mode === 'browser-repl') {

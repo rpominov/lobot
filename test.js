@@ -40,7 +40,7 @@ const wrap = (prefix, cb) => {
       t.end()
     })
   }
-  test.async = (test, plan, cb) => {
+  test.async = (text, plan, cb) => {
     tapeCatch(addPrefix(prefix, text), t => {
       t.plan(plan)
       cb(enhanceT(t))
